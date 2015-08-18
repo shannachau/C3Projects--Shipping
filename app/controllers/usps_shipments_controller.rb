@@ -1,5 +1,4 @@
 class UspsShipmentsController < ApplicationController
-
   def estimate
     response = usps_login.find_rates(origin, estimate_destination, package)
     usps_rates = response.rates.sort_by(&:price).collect {|rate| [rate.service_name, rate.price]}

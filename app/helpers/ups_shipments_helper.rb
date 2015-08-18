@@ -1,0 +1,2 @@
+module UpsShipmentsHelper
+end

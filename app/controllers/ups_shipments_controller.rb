@@ -1,0 +1,2 @@
+class UpsShipmentsController < ApplicationController
+end
