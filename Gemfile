@@ -51,10 +51,15 @@ group :development, :test do
   gem 'rspec-rails'
   gem 'factory_girl_rails', '~> 4.0'
   gem 'simplecov', require: false
+  gem 'vcr', '~> 2.9.3'
 
   gem 'sqlite3'
 end
 
 group :production do
   gem 'pg'
+end
+
+group :test do
+  gem 'webmock'
 end

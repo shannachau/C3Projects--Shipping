@@ -1,20 +1,24 @@
 require 'rails_helper'
+require 'support/vcr_setup'
 
 RSpec.describe UpsShipmentsController, type: :controller do
   describe "GET #estimate" do
+    before :each do
+      VCR.use_cassette 'UPS_response' do
+        get :estimate, zip: 91803, weight: 15
+      end
+    end
+
     it "is successful" do
-      get :estimate, zip: 91803, weight: 15
       expect(response.response_code).to eq 200
     end
 
     it "returns json" do
-      get :estimate, zip: 91803, weight: 15
       expect(response.header['Content-Type']).to include 'application/json'
     end
 
     context "the returned json object" do
       before :each do
-        get :estimate, zip: 91803, weight: 15
         @response = JSON.parse response.body
       end
 
