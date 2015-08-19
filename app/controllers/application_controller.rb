@@ -7,6 +7,8 @@ class ApplicationController < ActionController::Base
 
   ORIGIN = { country: 'US', state: 'WA', city: 'Seattle', zip: '98101' }
 
+  skip_before_filter :verify_authenticity_token, only: :ship
+
   private
 
   def origin

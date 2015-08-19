@@ -1,5 +1,4 @@
 class UspsShipmentsController < ApplicationController
-  #TODO: Max weight for package is 70. Remember to handle for this
 
   def estimate
     if (/\A\d+\z/.match(params[:weight])).nil? || (/\A\d+\z/.match(params[:zip])).nil?

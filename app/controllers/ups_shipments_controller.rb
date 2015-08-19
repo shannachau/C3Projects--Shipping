@@ -1,4 +1,5 @@
 class UpsShipmentsController < ApplicationController
+
   def estimate
     if (/\A\d+\z/.match(params[:weight])).nil? || (/\A\d+\z/.match(params[:zip])).nil?
       render json: { error: "Please enter a numeric value for weight and zip code."}, status: :bad_request
@@ -12,6 +13,14 @@ class UpsShipmentsController < ApplicationController
 
       render json: ups_rates.as_json
     end
+
+  end
+
+
+  def ship
+    # placeholder for now for testing
+    shipping_data = request.body.read
+    render json: shipping_data.as_json
   end
 
   private
