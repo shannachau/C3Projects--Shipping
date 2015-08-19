@@ -1,5 +1,7 @@
 require 'factory_girl'
 require 'simplecov'
+require 'webmock/rspec'
+require 'vcr'
 
 SimpleCov.start 'rails'
 

@@ -1,10 +1,10 @@
 require 'rails_helper'
 require 'support/vcr_setup'
 
-RSpec.describe UspsShipmentsController, type: :controller do
+RSpec.describe UpsShipmentsController, type: :controller do
   describe "GET #estimate" do
     before :each do
-      VCR.use_cassette 'USPS_response' do
+      VCR.use_cassette 'UPS_response' do
         get :estimate, zip: 91803, weight: 15
       end
     end

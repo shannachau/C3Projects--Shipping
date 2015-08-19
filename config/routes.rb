@@ -2,8 +2,8 @@ Rails.application.routes.draw do
   # The priority is based upon order of creation: first created -> highest priority.
   # See how all your routes lay out with "rake routes".
 
-# get 'estimate/ups/:zip/:weight' => 'ups_shipments#estimate'
-get 'estimate/usps/:zip/:weight'  => 'usps_shipments#estimate'
+  get 'estimate/ups/:zip/:weight' => 'ups_shipments#estimate'
+  get 'estimate/usps/:zip/:weight'  => 'usps_shipments#estimate'
   # You can have the root of your site routed with "root"
   # root 'welcome#index'
 
