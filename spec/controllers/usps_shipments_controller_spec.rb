@@ -11,7 +11,6 @@ RSpec.describe UspsShipmentsController, type: :controller do
       get :estimate, zip: 91803, weight: 15
       expect(response.header['Content-Type']).to include 'application/json'
     end
-  end
 
     context "the returned json object" do
       before :each do
@@ -37,4 +36,5 @@ RSpec.describe UspsShipmentsController, type: :controller do
         expect(@response.first[1]).to be_an_instance_of Fixnum
       end
     end
+  end
 end
