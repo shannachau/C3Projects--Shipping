@@ -6,6 +6,8 @@ Rails.application.routes.draw do
   get 'estimate/usps/:zip/:weight'  => 'usps_shipments#estimate'
 
   post 'ups' => 'ups_shipments#ship'
+  post 'usps' => 'usps_shipments#ship'
+
   # You can have the root of your site routed with "root"
   # root 'welcome#index'
 

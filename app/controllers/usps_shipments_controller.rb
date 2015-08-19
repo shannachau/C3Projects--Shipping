@@ -15,9 +15,4 @@ class UspsShipmentsController < ApplicationController
     end
   end
 
-  private
-
-  def usps_login
-    ActiveShipping::USPS.new(login: ENV['USPS_USERNAME'])
-  end
 end
