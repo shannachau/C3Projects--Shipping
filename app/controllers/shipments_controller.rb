@@ -12,6 +12,8 @@ class ShipmentsController < ApplicationController
     render json: response.as_json
   end
 
+  private
+  
   def response_data(login_method, usps = false)
     response = login_method.find_rates(origin, destination, package(@shipping_data[:weight]))
 
