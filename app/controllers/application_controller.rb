@@ -30,6 +30,7 @@ class ApplicationController < ActionController::Base
 
   def destination
     ActiveShipping::Location.new(
+      address1: @shipping_data["address"],
       city: @shipping_data["city"],
       state: @shipping_data["state"],
       zip: @shipping_data["zip"],
@@ -64,7 +65,7 @@ class ApplicationController < ActionController::Base
   def usps_login
     ActiveShipping::USPS.new(login: ENV['USPS_USERNAME'])
   end
-  
+
   def ups_login
     ActiveShipping::UPS.new(login: ENV['UPS_LOGIN'], password: ENV['UPS_PASSWORD'], key: ENV['UPS_KEY'], origin_name: 'petsy', origin_account: ENV['UPS_ACCOUNT_NO'])
   end
