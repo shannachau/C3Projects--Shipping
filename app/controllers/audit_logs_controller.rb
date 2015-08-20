@@ -8,7 +8,7 @@ class AuditLogsController < ApplicationController
     if log.save
       render json: { success: "Shipment information logged." }, status: 201
     else
-      render json: { error: "Shipment information was not logged."}
+      render json: { error: "Shipment information was not logged."}, status: :bad_request
     end
   end
 
