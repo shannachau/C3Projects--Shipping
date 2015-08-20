@@ -7,6 +7,7 @@ Rails.application.routes.draw do
 
   post 'ship' => 'shipments#ship'
 
+  post 'log' => 'audit_logs#log'
   # You can have the root of your site routed with "root"
   # root 'welcome#index'
 

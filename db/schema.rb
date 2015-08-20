@@ -14,11 +14,11 @@
 ActiveRecord::Schema.define(version: 20150820185109) do
 
   create_table "audit_logs", force: :cascade do |t|
-    t.string   "carrier",          null: false
-    t.string   "delivery_service", null: false
-    t.decimal  "shipping_cost",    null: false
-    t.decimal  "order_total",      null: false
-    t.integer  "order_id",         null: false
+    t.string   "carrier"
+    t.string   "delivery_service"
+    t.decimal  "shipping_cost"
+    t.decimal  "order_total"
+    t.integer  "order_id"
     t.datetime "created_at",       null: false
     t.datetime "updated_at",       null: false
   end
