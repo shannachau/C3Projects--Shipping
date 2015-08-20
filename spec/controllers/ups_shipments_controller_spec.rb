@@ -28,17 +28,21 @@ RSpec.describe UpsShipmentsController, type: :controller do
           expect(@response.length).to be >= 6
         end
 
-        it "each element is an Array of shipping info" do
-          expect(@response.first).to be_an_instance_of Array
+        it "each element is a hash of shipping info" do
+          expect(@response.first).to be_an_instance_of Hash
           expect(@response.first.length).to eq 2
         end
 
-        it "shipping_info[0] is a string" do
-          expect(@response.first[0]).to be_an_instance_of String
+        it "shipping_info hash includes delivery and shipping cost keys" do
+          expect(@response.first.keys).to eq(["delivery", "shipping_cost"])
         end
 
-        it "shipping_info[1] is an integer" do
-          expect(@response.first[1]).to be_an_instance_of Fixnum
+        it "shipping_info['delivery'] is a string" do
+          expect(@response.first['delivery']).to be_an_instance_of String
+        end
+
+        it "shipping_info['shipping_cost'] is a string" do
+          expect(@response.first['shipping_cost']).to be_an_instance_of Fixnum
         end
       end
     end
