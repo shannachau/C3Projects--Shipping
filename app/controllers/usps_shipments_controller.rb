@@ -17,7 +17,7 @@ class UspsShipmentsController < ApplicationController
         rate.service_code == "22"
       }
 
-      usps_rates = response.sort_by(&:price).collect { |rate| { service: rate.service_name, price_in_cents: rate.price } }
+      usps_rates = response.sort_by(&:price).collect { |rate| { delivery: rate.service_name, shipping_cost: (rate.price / 100) } }
       render json: usps_rates.as_json
     end
   end

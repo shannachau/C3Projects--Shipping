@@ -13,7 +13,7 @@ class ShipmentsController < ApplicationController
   end
 
   private
-  
+
   def response_data(login_method, usps = false)
     response = login_method.find_rates(origin, destination, package(@shipping_data[:weight]))
 
@@ -28,7 +28,7 @@ class ShipmentsController < ApplicationController
       response = response.rates
     end
 
-    response = response.sort_by(&:price).collect { |rate| { service: rate.service_name, delivery_date: rate.delivery_date, price_in_cents: rate.price } }
+    response = response.sort_by(&:price).collect { |rate| { carrier: rate.carrier, delivery: rate.service_name, delivery_date: rate.delivery_date, shipping_cost: (rate.price / 100) } }
     response.each do |rate|
       rate[:delivery_date] ||= "No delivery estimate available."
     end
