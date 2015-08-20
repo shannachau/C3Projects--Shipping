@@ -17,18 +17,6 @@ class ApplicationController < ActionController::Base
     ActiveShipping::Location.new(zip: params[:zip], country: 'US')
   end
 
-  # def estimate_package
-  #   weight = params[:weight].to_i
-  #   if weight <= 10
-  #     dimensions = [ 12, 10, 8 ]
-  #   elsif weight > 10 && weight <= 20
-  #     dimensions = [ 12, 12, 5.5 ]
-  #   else
-  #     dimensions = [ 14, 11, 11 ]
-  #   end
-  #   ActiveShipping::Package.new(weight, dimensions, units: :imperial)
-  # end
-
   def package(weight)
     weight = weight.to_i
     # weight = @shipping_data[:weight].to_i
