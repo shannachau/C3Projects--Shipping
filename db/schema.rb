@@ -18,6 +18,7 @@ ActiveRecord::Schema.define(version: 20150820185109) do
     t.string   "delivery_service", null: false
     t.decimal  "shipping_cost",    null: false
     t.decimal  "order_total",      null: false
+    t.integer  "order_id",         null: false
     t.datetime "created_at",       null: false
     t.datetime "updated_at",       null: false
   end
