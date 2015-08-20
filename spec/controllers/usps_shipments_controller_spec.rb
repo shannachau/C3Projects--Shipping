@@ -25,7 +25,7 @@ RSpec.describe UspsShipmentsController, type: :controller do
 
         it "is an array of shipping information" do
           expect(@response).to be_an_instance_of Array
-          expect(@response.length).to be >= 6
+          expect(@response.length).to be <= 4
         end
 
         it "each element is an Array of shipping info" do

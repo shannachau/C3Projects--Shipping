@@ -9,8 +9,15 @@ class UspsShipmentsController < ApplicationController
       render json: { errors: "Zip code needs to be five digits." }, status: :bad_request
     else
       response = usps_login.find_rates(origin, estimate_destination, package(params[:weight]))
-      usps_rates = response.rates.sort_by(&:price).collect {|rate| [rate.service_name, rate.price]}
+      # Select only service codes relevant to Petsy packages
+      response = response.rates.select { |rate|
+        rate.service_code == "1" ||
+        rate.service_code == "3" ||
+        rate.service_code == "4" ||
+        rate.service_code == "22"
+      }
 
+      usps_rates = response.sort_by(&:price).collect { |rate| [rate.service_name, rate.price] }
       render json: usps_rates.as_json
     end
   end
