@@ -9,7 +9,7 @@ class UpsShipmentsController < ApplicationController
       render json: { errors: "Zip code needs to be five digits." }, status: :bad_request
     else
       response = ups_login.find_rates(origin, estimate_destination, package(params[:weight]))
-      ups_rates = response.rates.sort_by(&:price).collect {|rate| [rate.service_name, rate.price]}
+      ups_rates = response.rates.sort_by(&:price).collect { |rate|  { service: rate.service_name, price_in_cents: rate.price } }
 
       render json: ups_rates.as_json
     end
