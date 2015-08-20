@@ -5,8 +5,7 @@ Rails.application.routes.draw do
   get 'estimate/ups/:zip/:weight' => 'ups_shipments#estimate'
   get 'estimate/usps/:zip/:weight'  => 'usps_shipments#estimate'
 
-# TODO: Change route and add new controller for combined info
-  post 'ship' => 'ups_shipments#ship'
+  post 'ship' => 'shipments#ship'
 
   # You can have the root of your site routed with "root"
   # root 'welcome#index'

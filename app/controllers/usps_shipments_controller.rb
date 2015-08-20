@@ -8,7 +8,7 @@ class UspsShipmentsController < ApplicationController
     elsif params[:zip].length != 5
       render json: { error: "Zip code needs to be five digits." }, status: :bad_request
     else
-      response = usps_login.find_rates(origin, estimate_destination, package)
+      response = usps_login.find_rates(origin, estimate_destination, package(params[:weight]))
       usps_rates = response.rates.sort_by(&:price).collect {|rate| [rate.service_name, rate.price]}
 
       render json: usps_rates.as_json

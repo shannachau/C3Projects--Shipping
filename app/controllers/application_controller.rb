@@ -7,17 +7,6 @@ class ApplicationController < ActionController::Base
 
   ORIGIN = { country: 'US', state: 'WA', city: 'Seattle', zip: '98101' }
 
-  skip_before_filter :verify_authenticity_token, only: :ship
-
-  def ship
-    @shipping_data = JSON.parse(request.body.read)
-    # body will include address, city, state, zipcode, country; also weight, dimensions
-    ups_response = ups_login.find_rates(origin, destination, package)
-    usps_response = usps_login.find_rates(origin, destination, package)
-    response = { ups: ups_response, usps: usps_response }
-    render json: response.as_json
-  end
-
   private
 
   def origin
@@ -28,30 +17,21 @@ class ApplicationController < ActionController::Base
     ActiveShipping::Location.new(zip: params[:zip], country: 'US')
   end
 
-  def destination
-    ActiveShipping::Location.new(
-      address1: @shipping_data["address"],
-      city: @shipping_data["city"],
-      state: @shipping_data["state"],
-      zip: @shipping_data["zip"],
-      country: @shipping_data["country"]
-      )
-  end
+  # def estimate_package
+  #   weight = params[:weight].to_i
+  #   if weight <= 10
+  #     dimensions = [ 12, 10, 8 ]
+  #   elsif weight > 10 && weight <= 20
+  #     dimensions = [ 12, 12, 5.5 ]
+  #   else
+  #     dimensions = [ 14, 11, 11 ]
+  #   end
+  #   ActiveShipping::Package.new(weight, dimensions, units: :imperial)
+  # end
 
-  def estimate_package
-    weight = params[:weight].to_i
-    if weight <= 10
-      dimensions = [ 12, 10, 8 ]
-    elsif weight > 10 && weight <= 20
-      dimensions = [ 12, 12, 5.5 ]
-    else
-      dimensions = [ 14, 11, 11 ]
-    end
-    ActiveShipping::Package.new(weight, dimensions, units: :imperial)
-  end
-
-  def package
-    weight = @shipping_data[:weight].to_i
+  def package(weight)
+    weight = weight.to_i
+    # weight = @shipping_data[:weight].to_i
     if weight <= 10
       dimensions = [ 12, 10, 8 ]
     elsif weight > 10 && weight <= 20
