@@ -11,7 +11,7 @@ class UpsShipmentsController < ApplicationController
 
     else
       response = ups_login.find_rates(origin, estimate_destination, package(params[:weight]))
-      ups_rates = response.rates.sort_by(&:price).collect { |rate|  { delivery: rate.service_name, shipping_cost: (rate.price / 100) } }
+      ups_rates = response.rates.sort_by(&:price).collect { |rate|  { delivery: rate.service_name, shipping_cost: (rate.price.to_f / 100) } }
 
       render json: ups_rates.as_json
     end

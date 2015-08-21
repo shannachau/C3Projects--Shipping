@@ -37,7 +37,7 @@ class ShipmentsController < ApplicationController
       response = response.rates
     end
 
-    response = response.sort_by(&:price).collect { |rate| { carrier: rate.carrier, delivery: rate.service_name, delivery_date: rate.delivery_date, shipping_cost: (rate.price / 100) } }
+    response = response.sort_by(&:price).collect { |rate| { carrier: rate.carrier, delivery: rate.service_name, delivery_date: rate.delivery_date, shipping_cost: (rate.price.to_f / 100) } }
     response.each do |rate|
       rate[:delivery_date] ||= "No delivery estimate available."
     end
