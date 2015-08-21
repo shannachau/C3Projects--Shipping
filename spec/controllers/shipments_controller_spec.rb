@@ -40,21 +40,25 @@ RSpec.describe ShipmentsController, type: :controller do
     end
 
 
-    # context "invalid request" do
-    #   before :each do
-    #     VCR.use_cassette 'invalid_ship_response' do
-    #       post :ship, { address1: "123 Fake St",
-    #                     city:    "Fake City",
-    #                     state:   "",
-    #                     zip:     "",
-    #                     country: "US"}.to_json,
-    #                   { format: :json }
-    #     end
-    #   end
-    #
-    #   it "is successful" do
-    #     expect(response.response_code).to eq 200
-    #   end
-    # end
+    context "invalid request" do
+      before :each do
+        VCR.use_cassette "ship_response" do
+          post :ship, { address1: "123 Fake St",
+                      city:    "Fake City",
+                      zip:     "98155",
+                      country: "US"}.to_json,
+                      { format: :json }
+        end
+      end
+
+      # it "is not successful" do
+      #   expect(response.response_code).to eq 400
+      # end
+
+      # it "returns json containing an error" do
+      #   expect(response.header['Content-Type']).to include 'application/json'
+      #   expect(eval(response.body)[:error]).to eq "Shipment information was not logged."
+      # end
+    end
   end
 end
