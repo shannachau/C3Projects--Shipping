@@ -2,6 +2,14 @@ require 'rails_helper'
 require 'support/vcr_setup'
 
 RSpec.describe ShipmentsController, type: :controller do
+  describe "GET #index" do
+    it "responds with an error and status code 404" do
+      get :index
+      expect(response.response_code).to eq 404
+      expect(eval(response.body)[:errors]).to include("This page does not exist. Perhaps you were looking for 'adaships.herokuapp.com/log' or 'adaships.herokuapp.com/ship'.")
+    end
+  end
+
   describe "POST #ship" do
     context "valid request" do
       before :each do
@@ -41,7 +49,7 @@ RSpec.describe ShipmentsController, type: :controller do
 
 
     context "invalid request" do
-      before :each do
+      it "returns code 400 and error message when an element is missing from the body" do
         VCR.use_cassette "ship_response" do
           post :ship, { address1: "123 Fake St",
                       city:    "Fake City",
@@ -49,8 +57,36 @@ RSpec.describe ShipmentsController, type: :controller do
                       country: "US"}.to_json,
                       { format: :json }
         end
+        expect(response.response_code).to eq 400
+        expect(eval(response.body)[:errors]).to include("Incomplete request.")
       end
 
+      it "returns code 400 and error message when an element in the body is empty" do
+        VCR.use_cassette "ship_response" do
+          post :ship, { address1: "",
+                      city:    "Fake City",
+                      state:   "WA",
+                      zip:     "98155",
+                      country: "US"}.to_json,
+                      { format: :json }
+        end
+        expect(response.response_code).to eq 400
+        expect(eval(response.body)[:errors]).to include("Incomplete request.")
+      end
+
+      it "returns code 400 and error message when an element in the body is nil" do
+        VCR.use_cassette "ship_response" do
+          post :ship, { address1: nil,
+                      city:    "Fake City",
+                      state:   "WA",
+                      zip:     "98155",
+                      country: "US"}.to_json,
+                      { format: :json }
+        end
+        expect(response.response_code).to eq 400
+        expect(eval(response.body)[:errors]).to include("Incomplete request.")
+      end
+    end
       # it "is not successful" do
       #   expect(response.response_code).to eq 400
       # end
@@ -59,6 +95,5 @@ RSpec.describe ShipmentsController, type: :controller do
       #   expect(response.header['Content-Type']).to include 'application/json'
       #   expect(eval(response.body)[:error]).to eq "Shipment information was not logged."
       # end
-    end
   end
 end

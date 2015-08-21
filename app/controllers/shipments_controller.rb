@@ -2,15 +2,23 @@ class ShipmentsController < ApplicationController
 
   skip_before_filter :verify_authenticity_token, only: :ship
 
+  def index
+    render json: { errors: "This page does not exist. Perhaps you were looking for 'adaships.herokuapp.com/log' or 'adaships.herokuapp.com/ship'."}, status: 404
+  end
+
   def ship
     @shipping_data = JSON.parse(request.body.read)
+    if  @shipping_data.keys.length != 5 ||
+        @shipping_data.values.select(&:nil?).length != 0 ||
+        @shipping_data.values.select(&:empty?).any?
+      render json: { errors: "Incomplete request."}, status: :bad_request
+    else
+      ups_response = response_data(ups_login)
+      usps_response = response_data(usps_login, true)
 
-    # TODO: Return appropriate response code when body incomplete etc.
-    ups_response = response_data(ups_login)
-    usps_response = response_data(usps_login, true)
-
-    response = { ups: ups_response, usps: usps_response }
-    render json: response.as_json
+      response = { ups: ups_response, usps: usps_response }
+      render json: response.as_json
+    end
   end
 
   private
@@ -29,7 +37,7 @@ class ShipmentsController < ApplicationController
       response = response.rates
     end
 
-    response = response.sort_by(&:price).collect { |rate| { carrier: rate.carrier, delivery: rate.service_name, delivery_date: rate.delivery_date, shipping_cost: (rate.price / 100) } }
+    response = response.sort_by(&:price).collect { |rate| { carrier: rate.carrier, delivery: rate.service_name, delivery_date: rate.delivery_date, shipping_cost: (rate.price.to_f / 100) } }
     response.each do |rate|
       rate[:delivery_date] ||= "No delivery estimate available."
     end
