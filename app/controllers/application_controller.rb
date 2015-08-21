@@ -6,7 +6,8 @@ class ApplicationController < ActionController::Base
   protect_from_forgery with: :exception
 
   ORIGIN = { country: 'US', state: 'WA', city: 'Seattle', zip: '98101' }
-
+  TIMEOUT = 5
+  
   private
 
   def origin

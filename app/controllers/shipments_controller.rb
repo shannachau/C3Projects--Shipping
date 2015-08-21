@@ -31,7 +31,7 @@ class ShipmentsController < ApplicationController
 
   def response_data(login_method, usps = false)
     begin
-      response = Timeout::timeout(5) {
+      response = Timeout::timeout(TIMEOUT) {
         login_method.find_rates(origin, destination, package(@shipping_data[:weight]))
       }
 
