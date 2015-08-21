@@ -2,6 +2,10 @@ class ShipmentsController < ApplicationController
 
   skip_before_filter :verify_authenticity_token, only: :ship
 
+  def index
+    render json: { errors: "This page does not exist. Perhaps you were looking for 'adaships.herokuapp.com/log' or 'adaships.herokuapp.com/ship'."}, status: 404
+  end
+
   def ship
     @shipping_data = JSON.parse(request.body.read)
     if  @shipping_data.keys.length != 5 ||

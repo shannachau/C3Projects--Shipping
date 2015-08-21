@@ -2,6 +2,14 @@ require 'rails_helper'
 require 'support/vcr_setup'
 
 RSpec.describe ShipmentsController, type: :controller do
+  describe "GET #index" do
+    it "responds with an error and status code 404" do
+      get :index
+      expect(response.response_code).to eq 404
+      expect(eval(response.body)[:errors]).to include("This page does not exist. Perhaps you were looking for 'adaships.herokuapp.com/log' or 'adaships.herokuapp.com/ship'.")
+    end
+  end
+
   describe "POST #ship" do
     context "valid request" do
       before :each do
