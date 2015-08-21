@@ -4,13 +4,17 @@ class ShipmentsController < ApplicationController
 
   def ship
     @shipping_data = JSON.parse(request.body.read)
+    if  @shipping_data.keys.length != 5 ||
+        @shipping_data.values.select(&:nil?).length != 0 ||
+        @shipping_data.values.empty?.any?
+      render json: { error: "Incomplete request."}, status: :bad_request
+    else
+      ups_response = response_data(ups_login)
+      usps_response = response_data(usps_login, true)
 
-    # TODO: Return appropriate response code when body incomplete etc.
-    ups_response = response_data(ups_login)
-    usps_response = response_data(usps_login, true)
-
-    response = { ups: ups_response, usps: usps_response }
-    render json: response.as_json
+      response = { ups: ups_response, usps: usps_response }
+      render json: response.as_json
+    end
   end
 
   private
