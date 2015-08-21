@@ -1,3 +1,4 @@
+require "timeout"
 class ShipmentsController < ApplicationController
 
   skip_before_filter :verify_authenticity_token, only: :ship
@@ -8,6 +9,7 @@ class ShipmentsController < ApplicationController
 
   def ship
     @shipping_data = JSON.parse(request.body.read)
+
     if  @shipping_data.keys.length != 5 ||
         @shipping_data.values.select(&:nil?).length != 0 ||
         @shipping_data.values.select(&:empty?).any?
@@ -16,30 +18,41 @@ class ShipmentsController < ApplicationController
       ups_response = response_data(ups_login)
       usps_response = response_data(usps_login, true)
 
-      response = { ups: ups_response, usps: usps_response }
-      render json: response.as_json
+      if ups_response.empty? || usps_response.empty?
+        render json: { errors: "Request timed out."}, status: 408
+      else
+        response = { ups: ups_response, usps: usps_response }
+        render json: response.as_json
+      end
     end
   end
 
   private
 
   def response_data(login_method, usps = false)
-    response = login_method.find_rates(origin, destination, package(@shipping_data[:weight]))
-
-    if usps
-      response = response.rates.select { |rate|
-        rate.service_code == "1" ||
-        rate.service_code == "3" ||
-        rate.service_code == "4" ||
-        rate.service_code == "22"
+    begin
+      response = Timeout::timeout(TIMEOUT) {
+        login_method.find_rates(origin, destination, package(@shipping_data[:weight]))
       }
-    else
-      response = response.rates
-    end
 
-    response = response.sort_by(&:price).collect { |rate| { carrier: rate.carrier, delivery: rate.service_name, delivery_date: rate.delivery_date, shipping_cost: (rate.price.to_f / 100) } }
-    response.each do |rate|
-      rate[:delivery_date] ||= "No delivery estimate available."
+      if usps
+        response = response.rates.select { |rate|
+          rate.service_code == "1" ||
+          rate.service_code == "3" ||
+          rate.service_code == "4" ||
+          rate.service_code == "22"
+        }
+      else
+        response = response.rates
+      end
+
+      response = response.sort_by(&:price).collect { |rate| { carrier: rate.carrier, delivery: rate.service_name, delivery_date: rate.delivery_date, shipping_cost: (rate.price.to_f / 100) } }
+      response.each do |rate|
+        rate[:delivery_date] ||= "No delivery estimate available."
+      end
+
+    rescue Timeout::Error
+      return {}
     end
   end
 

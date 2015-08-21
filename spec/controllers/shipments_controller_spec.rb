@@ -87,13 +87,27 @@ RSpec.describe ShipmentsController, type: :controller do
         expect(eval(response.body)[:errors]).to include("Incomplete request.")
       end
     end
-      # it "is not successful" do
-      #   expect(response.response_code).to eq 400
-      # end
 
-      # it "returns json containing an error" do
-      #   expect(response.header['Content-Type']).to include 'application/json'
-      #   expect(eval(response.body)[:error]).to eq "Shipment information was not logged."
-      # end
+    context "Timeout error" do
+      before :each do
+        stub_const("ShipmentsController::TIMEOUT", 0.00000000000000000001)
+        VCR.use_cassette "timeout_ship_response" do
+          post :ship, { address1: "123 Fake St",
+              city:    "Fake City",
+              state:   "WA",
+              zip:     "98155",
+              country: "US"}.to_json,
+            { format: :json }
+        end
+      end
+
+      it "responds with status code 408" do
+        expect(response.response_code).to eq 408
+      end
+
+      it "responds with appropriate error message" do
+        expect(eval(response.body)[:errors]).to include "Request timed out."
+      end
+    end
   end
 end
