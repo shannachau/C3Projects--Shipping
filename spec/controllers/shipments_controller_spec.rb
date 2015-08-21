@@ -41,7 +41,7 @@ RSpec.describe ShipmentsController, type: :controller do
 
 
     context "invalid request" do
-      before :each do
+      it "returns code 400 and error message when an element is missing from the body" do
         VCR.use_cassette "ship_response" do
           post :ship, { address1: "123 Fake St",
                       city:    "Fake City",
@@ -49,8 +49,36 @@ RSpec.describe ShipmentsController, type: :controller do
                       country: "US"}.to_json,
                       { format: :json }
         end
+        expect(response.response_code).to eq 400
+        expect(eval(response.body)[:errors]).to include("Incomplete request.")
       end
 
+      it "returns code 400 and error message when an element in the body is empty" do
+        VCR.use_cassette "ship_response" do
+          post :ship, { address1: "",
+                      city:    "Fake City",
+                      state:   "WA",
+                      zip:     "98155",
+                      country: "US"}.to_json,
+                      { format: :json }
+        end
+        expect(response.response_code).to eq 400
+        expect(eval(response.body)[:errors]).to include("Incomplete request.")
+      end
+
+      it "returns code 400 and error message when an element in the body is nil" do
+        VCR.use_cassette "ship_response" do
+          post :ship, { address1: nil,
+                      city:    "Fake City",
+                      state:   "WA",
+                      zip:     "98155",
+                      country: "US"}.to_json,
+                      { format: :json }
+        end
+        expect(response.response_code).to eq 400
+        expect(eval(response.body)[:errors]).to include("Incomplete request.")
+      end
+    end
       # it "is not successful" do
       #   expect(response.response_code).to eq 400
       # end
@@ -59,6 +87,5 @@ RSpec.describe ShipmentsController, type: :controller do
       #   expect(response.header['Content-Type']).to include 'application/json'
       #   expect(eval(response.body)[:error]).to eq "Shipment information was not logged."
       # end
-    end
   end
 end

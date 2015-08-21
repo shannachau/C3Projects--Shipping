@@ -76,14 +76,6 @@ RSpec.describe UpsShipmentsController, type: :controller do
           expect(response.response_code).to eq 400
           expect(eval(response.body)[:errors]).to include("Zip code needs to be five digits.")
         end
-
-        it "returns status 400 when zipcode is too long" do
-          VCR.use_cassette 'UPS_response' do
-            get :estimate, zip: "1111111111", weight: 16
-          end
-          expect(response.response_code).to eq 400
-          expect(eval(response.body)[:errors]).to include("Zip code needs to be five digits.")
-        end
       end
     end
   end
