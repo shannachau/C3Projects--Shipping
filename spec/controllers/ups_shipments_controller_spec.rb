@@ -41,8 +41,8 @@ RSpec.describe UpsShipmentsController, type: :controller do
           expect(@response.first['delivery']).to be_an_instance_of String
         end
 
-        it "shipping_info['shipping_cost'] is a string" do
-          expect(@response.first['shipping_cost']).to be_an_instance_of Fixnum
+        it "shipping_info['shipping_cost'] is a float" do
+          expect(@response.first['shipping_cost']).to be_an_instance_of Float
         end
       end
     end
