@@ -42,7 +42,6 @@ RSpec.describe UspsShipmentsController, type: :controller do
         end
 
         it "shipping_info['shipping_cost'] is a float" do
-          binding.pry
           expect(@response.first['shipping_cost']).to be_an_instance_of Float
         end
       end
