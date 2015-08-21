@@ -2,7 +2,7 @@ require 'rails_helper'
 require 'support/vcr_setup'
 
 RSpec.describe ShipmentsController, type: :controller do
-  describe "GET #estimate" do
+  describe "POST #ship" do
     context "valid request" do
       before :each do
         VCR.use_cassette 'valid_ship_response' do
