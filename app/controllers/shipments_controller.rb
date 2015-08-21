@@ -5,6 +5,7 @@ class ShipmentsController < ApplicationController
   def ship
     @shipping_data = JSON.parse(request.body.read)
 
+    # TODO: Return appropriate response code when body incomplete etc.
     ups_response = response_data(ups_login)
     usps_response = response_data(usps_login, true)
 
